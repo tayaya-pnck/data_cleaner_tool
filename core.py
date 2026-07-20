@@ -160,6 +160,14 @@ class StringNormalizer(BaseCleaner):
         # perhatikan apakah type data adalah string (object di pandas)
         # perhatikan apakah config mengijinkan text stripping
         # perhatikan apakah config ingin melakukan perubahan ke lower case.
+        for c in self.config.column_configs:
+            if c.name not in df.columns:
+                continue
+            if pd.api.types.is_string_dtype(df[c.name]):
+                if c.strip_string:
+                    df[c.name] = df[c.name].str.strip()
+                if c.lower_case:
+                    df[c.name] = df[c.name].str.lower()
         return  df
 
 class AllowedValuesFilter(BaseCleaner):
