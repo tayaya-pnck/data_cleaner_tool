@@ -84,7 +84,7 @@ if __name__ == "__main__":
                 lower_case=True,
                 allowed_values=["M", "F"]
             )
-        ]
+        ],
     )
 
     cleaner = DataCleaner(config, data_raw)

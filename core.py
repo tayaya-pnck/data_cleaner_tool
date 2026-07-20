@@ -142,6 +142,11 @@ class Deduplicator(BaseCleaner):
         # NOTES:
         # 1. Pertimbangkan atribbut drop_duplicated pada ColumnConfig
         # 2. Pertimbangkan kemungkinan user menghapus data berdasarkan kolom subset tertentu.
+        if self.config.drop_duplicated:
+            before = len(df)
+            df = df.drop_duplicates(subset=self.config.duplicate_subset)
+            report.duplicated_removed = before - len(df)
+
         return df
 
 class StringNormalizer(BaseCleaner):
@@ -155,8 +160,7 @@ class StringNormalizer(BaseCleaner):
         # perhatikan apakah type data adalah string (object di pandas)
         # perhatikan apakah config mengijinkan text stripping
         # perhatikan apakah config ingin melakukan perubahan ke lower case.
-        
-        return df
+        return  df
 
 class AllowedValuesFilter(BaseCleaner):
     def implement(self, df: pd.DataFrame, report: CleaningReport) -> pd.DataFrame:
