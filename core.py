@@ -180,5 +180,12 @@ class AllowedValuesFilter(BaseCleaner):
         # perhatikan apakah sedang memproses kolom yang benar
         # perhatikan apakah user memiliki allowed_values spesifik atau kolom bisa menerima value apa saja.
         # ambillah value yang diluar allowed_values untuk diubah menjadi np.nan.
-        
+        for c in self.config.column_configs:
+            if c.name not in df.columns or c.allowed_values is None:
+                continue
+            mask = ~df[c.name].isin(c.allowed_values)
+            n = int(mask.sum())
+            if n:
+                df.loc[mask, c.name] = np.nan
+                report.invalid_values_deleted[c.name] = n
         return df
